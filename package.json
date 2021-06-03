@@ -1,6 +1,6 @@
 {
-  "name": "normalawsnodejsserver",
-  "version": "1.0.0",
+  "name": "basic-sls-awsnodejs",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
