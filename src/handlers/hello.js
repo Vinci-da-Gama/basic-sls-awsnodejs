@@ -5,9 +5,7 @@ async function hello(event, context) {
       {
         message: 'Go Serverless v1.0! Your function executed successfully!',
         input: event,
-      },
-      null,
-      2
+      }, null, 2
     )
   };
 }

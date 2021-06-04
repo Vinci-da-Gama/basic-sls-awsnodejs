@@ -10,7 +10,9 @@
   "author": "Collin",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.920.0"
+    "aws-sdk": "^2.920.0",
+    "serverless-offline": "^7.0.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
