@@ -32,6 +32,12 @@ provider:
   memorySize: 256
   stage: ${opt:stage, 'dev'}
   region: ap-southeast-2
+  environment:
+    AUCTIONS_TABLE_NAME: ${self:custom.AuctionsTable.name}
+  iam:
+    role:
+      statements:
+        - ${file(ymls/iam/AuctionsTableIAM.yml):AuctionsTableIAM}
 
 # you can overwrite defaults here
 #  stage: dev
@@ -72,12 +78,39 @@ functions:
       - httpApi:
           path: /hello
           method: GET
+
   createAuction:
     handler: src/handlers/createAuction.createAuctionHandler
     events:
       - httpApi:
           path: /auction
           method: POST
+
+  getAuctions:
+    handler: src/handlers/getAuctions.getAuctionsHandler
+    events:
+      - httpApi:
+          path: /auctions
+          method: GET
+
+  getAuction:
+    handler: src/handlers/getAuction.getAuctionHandler
+    events:
+      - httpApi:
+          path: /auction/{id}
+          method: GET
+
+  placeBid:
+    handler: src/handlers/placeBid.placeBidHandler
+    events:
+      - httpApi:
+          path: /auction/{id}/bid
+          method: PATCH
+
+  processAuctions:
+    handler: src/handlers/processAuctions.processAuctionsHandler
+    # events:
+    #   - schedule: rate(1 minute)
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
@@ -121,17 +154,7 @@ functions:
 # you can add CloudFormation resource templates here
 resources:
  Resources:
-  AuctionsTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: AuctionsTable
-      BillingMode: PAY_PER_REQUEST
-      AttributeDefinitions:
-        - AttributeName: id
-          AttributeType: S
-      KeySchema:
-        - AttributeName: id
-          KeyType: HASH
+  AuctionsTable: ${file(ymls/resources/AuctionsTable.yml):AuctionsTable}
 #    NewResource:
 #      Type: AWS::S3::Bucket
 #      Properties:
@@ -140,3 +163,6 @@ resources:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
+
+custom:
+  AuctionsTable: ${file(ymls/custom/AuctionsTable.yml):AuctionsTable}
