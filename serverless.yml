@@ -75,37 +75,41 @@ functions:
   hello:
     handler: src/handlers/hello.helloHandler
     events:
-      - httpApi:
+      - http:
           path: /hello
           method: GET
 
   createAuction:
     handler: src/handlers/createAuction.createAuctionHandler
     events:
-      - httpApi:
+      - http:
           path: /auction
           method: POST
+          authorizer: ${self:custom.authorizer}
 
   getAuctions:
     handler: src/handlers/getAuctions.getAuctionsHandler
     events:
-      - httpApi:
+      - http:
           path: /auctions
           method: GET
+          authorizer: ${self:custom.authorizer}
 
   getAuction:
     handler: src/handlers/getAuction.getAuctionHandler
     events:
-      - httpApi:
+      - http:
           path: /auction/{id}
           method: GET
+          authorizer: ${self:custom.authorizer}
 
   placeBid:
     handler: src/handlers/placeBid.placeBidHandler
     events:
-      - httpApi:
+      - http:
           path: /auction/{id}/bid
           method: PATCH
+          authorizer: ${self:custom.authorizer}
 
   processAuctions:
     handler: src/handlers/processAuctions.processAuctionsHandler
@@ -165,4 +169,5 @@ resources:
 #       Value: "Some output value"
 
 custom:
+  authorizer: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:auth0-service-${self:provider.stage}-auth
   AuctionsTable: ${file(ymls/custom/AuctionsTable.yml):AuctionsTable}
