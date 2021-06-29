@@ -1,0 +1,3 @@
+CfOutputsEmailQueue:
+  arn: ${cf:email-notification-service-${self:provider.stage}.EmailQueueArn}
+  url: ${cf:email-notification-service-${self:provider.stage}.EmailQueueUrl}

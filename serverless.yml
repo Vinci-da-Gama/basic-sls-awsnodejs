@@ -34,10 +34,12 @@ provider:
   region: ap-southeast-2
   environment:
     AUCTIONS_TABLE_NAME: ${self:custom.AuctionsTable.name}
+    EMAIL_QUEUE_URL: ${self:custom.CfOutputsEmailQueue.url}
   iam:
     role:
       statements:
         - ${file(ymls/iam/AuctionsTableIAM.yml):AuctionsTableIAM}
+        - ${file(ymls/iam/EmailQueueIAM.yml):EmailQueueIAM}
 
 # you can overwrite defaults here
 #  stage: dev
@@ -171,3 +173,4 @@ resources:
 custom:
   authorizer: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:auth0-service-${self:provider.stage}-auth
   AuctionsTable: ${file(ymls/custom/AuctionsTable.yml):AuctionsTable}
+  CfOutputsEmailQueue: ${file(ymls/custom/CfOutputsEmailQueue.yml):CfOutputsEmailQueue}

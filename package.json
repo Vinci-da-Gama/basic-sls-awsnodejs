@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dpv": "sls deploy -v",
+    "dppa": "sls deploy -f processAuctions -v",
+    "ivpa": "sls invoke -f processAuctions -l",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
