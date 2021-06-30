@@ -35,11 +35,13 @@ provider:
   environment:
     AUCTIONS_TABLE_NAME: ${self:custom.AuctionsTable.name}
     EMAIL_QUEUE_URL: ${self:custom.CfOutputsEmailQueue.url}
+    AUCTION_S3BUCKET_NAME: ${self:custom.AuctionS3Bucket.name}
   iam:
     role:
       statements:
         - ${file(ymls/iam/AuctionsTableIAM.yml):AuctionsTableIAM}
         - ${file(ymls/iam/EmailQueueIAM.yml):EmailQueueIAM}
+        - ${file(ymls/iam/AuctionS3BucketIAM.yml):AuctionS3BucketIAM}
 
 # you can overwrite defaults here
 #  stage: dev
@@ -87,6 +89,7 @@ functions:
       - http:
           path: /auction
           method: POST
+          cors: true
           authorizer: ${self:custom.authorizer}
 
   getAuctions:
@@ -95,6 +98,7 @@ functions:
       - http:
           path: /auctions
           method: GET
+          cors: true
           authorizer: ${self:custom.authorizer}
 
   getAuction:
@@ -103,6 +107,7 @@ functions:
       - http:
           path: /auction/{id}
           method: GET
+          cors: true
           authorizer: ${self:custom.authorizer}
 
   placeBid:
@@ -111,6 +116,16 @@ functions:
       - http:
           path: /auction/{id}/bid
           method: PATCH
+          cors: true
+          authorizer: ${self:custom.authorizer}
+
+  uploadAuctionPicture:
+    handler: src/handlers/uploadAuctionPicture.uploadAuctionPictureHandler
+    events:
+      - http:
+          path: /auction/{id}/picture
+          method: PATCH
+          cors: true
           authorizer: ${self:custom.authorizer}
 
   processAuctions:
@@ -161,6 +176,8 @@ functions:
 resources:
  Resources:
   AuctionsTable: ${file(ymls/resources/AuctionsTable.yml):AuctionsTable}
+  AuctionS3Bucket: ${file(ymls/resources/AuctionS3Bucket.yml):AuctionS3Bucket}
+  AuctionS3BucketPolicy: ${file(ymls/resources/AuctionS3Bucket.yml):AuctionS3BucketPolicy}
 #    NewResource:
 #      Type: AWS::S3::Bucket
 #      Properties:
@@ -174,3 +191,5 @@ custom:
   authorizer: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:auth0-service-${self:provider.stage}-auth
   AuctionsTable: ${file(ymls/custom/AuctionsTable.yml):AuctionsTable}
   CfOutputsEmailQueue: ${file(ymls/custom/CfOutputsEmailQueue.yml):CfOutputsEmailQueue}
+  AuctionS3Bucket:
+    name: auction-s3bucket-wasfev2333sd-${self:provider.stage}

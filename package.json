@@ -7,6 +7,8 @@
     "dpv": "sls deploy -v",
     "dppa": "sls deploy -f processAuctions -v",
     "ivpa": "sls invoke -f processAuctions -l",
+    "dpup": "sls deploy -f uploadAuctionPicture -v",
+    "logup": "sls logs -f uploadAuctionPicture -t",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

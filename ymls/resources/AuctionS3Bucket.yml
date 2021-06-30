@@ -1,0 +1,22 @@
+AuctionS3Bucket:
+  Type: AWS::S3::Bucket
+  Properties:
+    BucketName: ${self:custom.AuctionS3Bucket.name}
+    LifecycleConfiguration:
+      Rules:
+        - Id: ExpiredPictures
+          Status: Enabled
+          ExpirationInDays: 1
+
+AuctionS3BucketPolicy:
+  Type: AWS::S3::BucketPolicy
+  Properties:
+    Bucket: !Ref AuctionS3Bucket
+    PolicyDocument:
+      Statement:
+        - Sid: PublicRead
+          Effect: Allow
+          Principal: '*'
+          Action:
+            - s3:GetObject
+          Resource: arn:aws:s3:::${self:custom.AuctionS3Bucket.name}/*
